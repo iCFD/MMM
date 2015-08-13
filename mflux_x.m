@@ -24,9 +24,9 @@ fx_r=bdc_f(fx_r,nx);
 % Riemann and DRiemann
 for i = 2:nx-1
     if v(1,i) >= 0
-        fb(i)=f_r(i);   fb_x(i)=fx_r(i);
+        fb(i)=f_r(i-1); fb_x(i)=fx_r(i-1);
     else
-        fb(i)=f_l(i+1); fb_x(i)=fx_l(i+1);
+        fb(i)=f_l(i-1); fb_x(i)=fx_l(i-1);
     end 
 end 
 

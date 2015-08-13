@@ -83,8 +83,8 @@ t=0; u=u0; it=0; dt=dt0;
 % index
 i=2:nE-1;
 
-%while t < tEnd
-for nn = 1:10
+while t < tEnd
+%for nn = 1:20
     
     % Correction for final time step
     if t+dt>tEnd, dt=tEnd-t; end

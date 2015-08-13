@@ -23,7 +23,7 @@ clear; %close all; clc;
 
 %% Parameters
 fluxfun = 'linear'; 
-    cfl = 0.40;	% CFL condition.
+    cfl = 0.45;	% CFL condition.
    tEnd = 2.00;	% final time.
       K = 3;	% degree of accuaracy (default value).
      nE = 80;	% number of elements.
@@ -80,7 +80,7 @@ u0(:,1)=0; u0(:,nE)=0;
 ue=u0; 
 
 % Set plot range
-d=0.1; plotrange = [a,b,min(u0(:))-d,max(u0(:))+d];
+d=0.2; plotrange = [a,b,min(u0(:))-d,max(u0(:))+2*d];
 
 %% Solver Loop
 
@@ -120,7 +120,7 @@ for nn = 1:10
     % Plot u
     if rem(it,10)==0;
         figure(1); plot(x,u0,'-k',x,u,'-+',xc,u_bar,'or'); 
-        axis(plotrange); grid on; drawnow;
+        axis(plotrange); grid on; daspect([1,2,1]); drawnow;
     end
 end
 
@@ -130,7 +130,7 @@ end
 
 % Plot solution
 h=plot(x(:),ue(:),'-k',x(:),u(:),'-+r',xc(:),u_bar(:),'ob'); axis(plotrange);
-legend(h,'Exact','MCV3','Cell Averages'); grid on;
+legend(h,'Exact','MCV3','Cell Averages'); legend boxoff; grid on; daspect([1.5,2,1]);
 title('MMC-FR','interpreter','latex','FontSize',18);
 xlabel('$\it{x}$','interpreter','latex','FontSize',14);
 ylabel({'$\it{u(x)}$'},'interpreter','latex','FontSize',14);

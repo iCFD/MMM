@@ -1,6 +1,8 @@
 function fm_x = mflux_x(u,v,xi,dx,nx,ischeme)
 
 % Initialize Arrays
+fb = zeros(1,nx);
+fb_x=zeros(1,nx);
 f_l =zeros(1,nx);
 f_r =zeros(1,nx);
 fx_l=zeros(1,nx);
@@ -26,7 +28,7 @@ for i = 2:nx-1
     if v(1,i) >= 0
         fb(i)=f_r(i-1); fb_x(i)=fx_r(i-1);
     else
-        fb(i)=f_l(i-1); fb_x(i)=fx_l(i-1);
+        fb(i-1)=f_l(i-1); fb_x(i-1)=fx_l(i-1);
     end 
 end 
 

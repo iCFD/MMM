@@ -2,14 +2,15 @@ function dfdxi = mmc_FR(a,u,L,nE,scheme)
 % Multi-moment Flux Reconstruction 
 % MCV3, MCV3_UPCC & MCV3_CPCC
 
-% Solution array for df/dxi
-dfdxi=zeros(3,nE);
-
 % Build discrete flux
 f = a.*u;
 
 % Interpolate flux and dflux values at the boundaries of Ij
 fL=L.l*f; dfL=L.dl*f; fR=L.r*f; dfR=L.dr*f;
+
+% Initialize indexes
+ip=[2:nE,1];    % i+1
+im=[nE,1:nE-1]; % i-1
 
 % Build Numerical fluxes across faces
 %f_nface = [0,fR]; % -side
@@ -26,17 +27,19 @@ fL=L.l*f; dfL=L.dl*f; fR=L.r*f; dfR=L.dr*f;
 
 % Riemann data at the boundaries
 if a(1)>0
-    fb=fR([nE,1:nE-1]); dfb=dfR([nE,1:nE-1]);
+    fb=fR(im); dfb=dfR(im);
 else
     fb=fL; dfb=dfL;
 end
 
-% Compute df/dxi
+% Solution array for df/dxi
+dfdxi=zeros(3,nE);
+
 switch scheme
     case 1 % MCV3
         dfdxi(1,:)=dfb;
-        dfdxi(2,:)=(3*fb([2:nE,1])-3*fb-dfb-dfb([2:nE,1]))/4;
-        dfdxi(3,:)=dfb([2:nE,1]);
+        dfdxi(2,:)=(3*fb(ip)-3*fb-dfb-dfb(ip))/4;
+        dfdxi(3,:)=dfb(ip);
     case 2 % MCV3_UPCC
         %dfdxi(1,:)=(2*(f(i,1)+f(i,2))-0.5*(7*fb(i)+fb(i+1)));
         %dfdxi(2,:)=(f(i,3)-f(i,1))/2;

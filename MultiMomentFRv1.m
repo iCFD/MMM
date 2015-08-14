@@ -40,8 +40,7 @@ switch scheme
 end
 
 % Build Mesh
-a=-1; b=1; dx=(b-a)/nE; xc=(a-dx/2):dx:(b+dx); 
-nE=nE+2; x=ones(3,1)*xc +(dx/2)*xi*ones(1,nE);
+a=-1;b=1;dx=(b-a)/nE;xc=(a+dx/2):dx:b;x=ones(3,1)*xc+(dx/2)*xi*ones(1,nE);
 
 % Define velocity fields functions
 switch fluxfun
@@ -72,9 +71,6 @@ switch ICcase
     case 2	% Guassian IC
         u0 = IC(x,1); % Gaussian wave: u_0(x) = exp(-20*x.^2)
 end
-
-% set BCs 
-u0(:,1)=0; u0(:,nE)=0;
 
 % Exact solution
 ue=u0; 

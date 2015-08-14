@@ -12,12 +12,12 @@ f = a.*u;
 fL=L.l*f; dfL=L.dl*f; fR=L.r*f; dfR=L.dr*f;
 
 % Build Numerical fluxes across faces
-f_nface = [0,fR]; % -side
-f_pface = [fL,0]; % +side
+%f_nface = [0,fR]; % -side
+%f_pface = [fL,0]; % +side
 
 % Apply Periodic BCs
-f_nface(1) = f_nface(end); % left BD
-f_pface(end) = f_pface(1); % right BD
+%f_nface(1) = f_nface(end); % left BD
+%f_pface(end) = f_pface(1); % right BD
 
 % LF numerical flux
 %alpha=abs(a);
@@ -26,7 +26,7 @@ f_pface(end) = f_pface(1); % right BD
 
 % Riemann data at the boundaries
 if a(1)>0
-    fb=fR; dfb=dfR;
+    fb=fR([nE,1:nE-1]); dfb=dfR([nE,1:nE-1]);
 else
     fb=fL; dfb=dfL;
 end

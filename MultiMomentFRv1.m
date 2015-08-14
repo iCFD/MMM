@@ -23,10 +23,10 @@ clear; %close all; clc;
 
 %% Parameters
 fluxfun = 'linear'; 
-    cfl = 0.45;	% CFL condition.
+    cfl = 0.40;	% CFL condition.
    tEnd = 2.00;	% final time.
       K = 3;	% degree of accuaracy (default value).
-     nE = 80;	% number of elements.
+     nE = 200;	% number of elements.
  scheme = 1;	% (1)MCV3, (2)MCV3_UPCC and (3)MCV3_CPCC.
 
 % Build Solutions Points
@@ -40,8 +40,8 @@ switch scheme
 end
 
 % Build Mesh
-a=-1; b=1; dx=(b-a)/nE; xc=(a-dx/2):dx:(b+dx/2); 
-nE = nE+2; x=ones(3,1)*xc+(dx/2)*xi*ones(1,nE);
+a=-1; b=1; dx=(b-a)/nE; xc=(a-dx/2):dx:(b+dx); 
+nE=nE+2; x=ones(3,1)*xc +(dx/2)*xi*ones(1,nE);
 
 % Define velocity fields functions
 switch fluxfun
@@ -90,8 +90,8 @@ dt0=cfl*dx/max(v(:));
 % Set initial time & load IC
 t=0; u=u0; it=0; dt=dt0;
 
-%while t < tEnd
-for nn = 1:10
+while t < tEnd
+%for nn = 1:10
     
     % Correction for final time step
     if t+dt>tEnd, dt=tEnd-t; end
@@ -119,7 +119,7 @@ for nn = 1:10
     
     % Plot u
     if rem(it,10)==0;
-        figure(1); plot(x,u0,'-k',x,u,'-+',xc,u_bar,'or'); 
+        figure(1); plot(x,u0,'-k',x,u,'-',xc,u_bar,'or'); 
         axis(plotrange); grid on; daspect([1,2,1]); drawnow;
     end
 end
@@ -129,7 +129,7 @@ end
 %mkdir('AdvectionRK33'); save('AdvectionRK33/Plot.mat','x','xc','u','ue','u_bar','dx','dt0','it','tEnd','P','cfl','nE');
 
 % Plot solution
-h=plot(x(:),ue(:),'-k',x(:),u(:),'-+r',xc(:),u_bar(:),'ob'); axis(plotrange);
+h=plot(x(:),ue(:),'-k',x(:),u(:),'-+r',xc(:),u_bar(:),'sb'); axis(plotrange);
 legend(h,'Exact','MCV3','Cell Averages'); legend boxoff; grid on; daspect([1.5,2,1]);
 title('MMC-FR','interpreter','latex','FontSize',18);
 xlabel('$\it{x}$','interpreter','latex','FontSize',14);

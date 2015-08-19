@@ -27,7 +27,7 @@ fluxfun = 'linear';
    tEnd = 2.00;	% final time.
       K = 3;	% degree of accuaracy (default value).
      nE = 200;	% number of elements.
- scheme = 2;	% (1)MCV3, (2)MCV3_UPCC and (3)MCV3_CPCC.
+ scheme = 3;	% (1)MCV3, (2)MCV3_UPCC and (3)MCV3_CPCC.
 
 % Build Solutions Points
 switch scheme

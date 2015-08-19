@@ -32,7 +32,7 @@ else
     fb=fL; dfb=dfL;
 end
 
-% Solution array for df/dxi
+% Compute solution array for df/dxi
 dfdxi=zeros(3,nE);
 
 switch scheme
@@ -41,12 +41,12 @@ switch scheme
         dfdxi(2,:)=(3*fb(ip)-3*fb-dfb-dfb(ip))/4;
         dfdxi(3,:)=dfb(ip);
     case 2 % MCV3_UPCC
-        %dfdxi(1,:)=(2*(f(i,1)+f(i,2))-0.5*(7*fb(i)+fb(i+1)));
-        %dfdxi(2,:)=(f(i,3)-f(i,1))/2;
-        %dfdxi(3,:)=(-2*(f(i,2)+f(i,3))+0.5*(7*fb(i+1)+fb(i)));
+        dfdxi(1,:)= 2.0*(f(1,:)+f(2,:))-0.5*(7.0*fb+fb(ip));
+        dfdxi(2,:)=(f(3,:)-f(1,:))/2;
+        dfdxi(3,:)=-2.0*(f(2,:)+f(3,:))+0.5*(7.0*fb(ip)+fb);
     case 3 % MCV3_CPCC
-        %s3=sqrt(3);
-        %dfdxi(1,:)=(s3*(3/4*f(i,1)+5/6*f(i,2)-1/12*f(i,3))+3/4*(1.5-s3)*fb(i+1)-3/4*(1.5+s3)*fb(i));
-        %dfdxi(2,:)=(f(i,3)-f(i,1))*s3/3;
-        %dfdxi(3,:)=(s3*(1/12*f(i,1)-5/6*f(i,2)-3/4*f(i,3))+3/4*(1.5+s3)*fb(i+1)-3/4*(1.5-s3)*fb(i));
+        s3=sqrt(3);
+        dfdxi(1,:)=s3*(3/4*f(1,:)+5/6*f(2,:)-1/12*f(3,:))+3/4*(1.5-s3)*fb(ip)-3/4*(1.5+s3)*fb;
+        dfdxi(2,:)=(f(3,:)-f(1,:))*s3/3;
+        dfdxi(3,:)=s3*(1/12*f(1,:)-5/6*f(2,:)-3/4*f(3,:))+3/4*(1.5+s3)*fb(ip)-3/4*(1.5-s3)*fb;
 end

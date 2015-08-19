@@ -24,10 +24,10 @@ clear; %close all; clc;
 %% Parameters
 fluxfun = 'linear'; 
     cfl = 0.40;	% CFL condition.
-   tEnd = 2.00;	% final time.
+   tEnd = 2.0;	% final time.
       K = 3;	% degree of accuaracy (default value).
-     nE = 200;	% number of elements.
- scheme = 1;	% (1)MCV3, (2)MCV3_UPCC and (3)MCV3_CPCC.
+     nE = 100;	% number of elements.
+ scheme = 2;	% (1)MCV3, (2)MCV3_UPCC and (3)MCV3_CPCC.
 
 % Build Solutions Points
 switch scheme
@@ -46,8 +46,8 @@ a=-1;b=1;dx=(b-a)/nE;xc=(a+dx/2):dx:b;x=ones(3,1)*xc+(dx/2)*xi*ones(1,nE);
 switch fluxfun
     case 'linear'
         advect = @(x) 1*ones(size(x));
-    case 'quasilinear' 
-        advect = @(x) 1.0+0.5*sin(2*pi*x);
+    case 'sine' 
+        advect = @(x) 1.5+cos(pi*x);
 end
 
 % Build discrete velocity field
@@ -64,12 +64,12 @@ L.dr= double(subs(l.dlagrangePolynomial,+1));
 J = dx/2;
 
 % Build IC
-ICcase = 1;	% (1)Testing, (2)Gaussian.
+ICcase = 2;	% (1)Testing, (2)Gaussian.
 switch ICcase
     case 1	% Testing IC
         u0 = TestingIC(x); % Jiang and Shu IC
     case 2	% Guassian IC
-        u0 = IC(x,1); % Gaussian wave: u_0(x) = exp(-20*x.^2)
+        u0 = IC(x,8); % Gaussian wave: u_0(x) = exp(-20*x.^2)
 end
 
 % Exact solution
@@ -126,7 +126,8 @@ end
 
 % Plot solution
 h=plot(x(:),ue(:),'-k',x(:),u(:),'-+r',xc(:),u_bar(:),'sb'); axis(plotrange);
-legend(h,'Exact','MCV3','Cell Averages'); legend boxoff; grid on; daspect([1.5,2,1]);
+l=legend(h,'Exact','MCV3 $u(x)$','MCV3 $\bar{u}$'); 
+set(l,'Interpreter','latex'); legend boxoff; grid on; daspect([1.5,2,1]);
 title('MMC-FR','interpreter','latex','FontSize',18);
 xlabel('$\it{x}$','interpreter','latex','FontSize',14);
 ylabel({'$\it{u(x)}$'},'interpreter','latex','FontSize',14);

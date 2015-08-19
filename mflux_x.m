@@ -8,6 +8,7 @@ f_r =zeros(1,nx);
 fx_l=zeros(1,nx);
 fx_r=zeros(1,nx);
 
+f = v.*u;
 % Compute Boundary values and derivatives
 for e=1:nx % for every element
     fe = v(:,e).*u(:,e); % compute f = v.*u;
@@ -41,12 +42,17 @@ for i = 1:nx-1
     switch ischeme
         case 1 % MCV3
             fm_x(1,i) = 2.0/dx * fb_x(i);
-            fm_x(2,i) = 2.0/dx * (3.0*(fb(i+1)-fb(i)) - fb_x(i) - fb_x(i+1))/4.0;
+            fm_x(2,i) = 2.0/dx * (3.0*(fb(i+1)-fb(i))-fb_x(i)-fb_x(i+1))/4.0;
             fm_x(3,i) = 2.0/dx * fb_x(i+1);
         case 2
-            fm_x(:,i) = zeros(3,1);
+            fm_x(1,i) = 2.0/dx * (2.0*(f(1,i)+f(2,i))-0.5*(7.0*fb(i)+fb(i+1)));
+            fm_x(2,i) = 1.0/dx * (f(3,i)-f(1,i));
+            fm_x(3,i) = 2.0/dx * (-2.0*(f(2,i)+f(3,i))+0.5*(7.0*fb(i+1)+fb(i)));
         case 3
-            fm_x(:,i) = zeros(3,1);
+            s3=sqrt(3);
+            fm_x(1,i) = 2.0/dx * (s3*(3/4*f(1,i)+5/6*f(2,i)-1/12*f(3,i))+3/4*(1.5-s3)*fb(i+1)-3/4*(1.5+s3)*fb(i));
+            fm_x(2,i) = 2.0/dx * (f(3,i)-f(1,i))*s3/3;
+            fm_x(3,i) = 2.0/dx * (s3*(1/12*f(1,i)-5/6*f(2,i)-3/4*f(3,i))+3/4*(1.5+s3)*fb(i+1)-3/4*(1.5-s3)*fb(i));
     end
 end
 

@@ -23,7 +23,7 @@ clear; %close all; clc;
 
 %% Parameters
 fluxfun = 'linear'; 
-    cfl = 0.40;	% CFL condition.
+    cfl = 0.30;	% CFL condition.
    tEnd = 2.0;	% final time.
       K = 3;	% degree of accuaracy (default value).
      nE = 100;	% number of elements.
@@ -64,7 +64,7 @@ L.dr= double(subs(l.dlagrangePolynomial,+1));
 J = dx/2;
 
 % Build IC
-ICcase = 2;	% (1)Testing, (2)Gaussian.
+ICcase=1;	% (1)Testing, (2)Gaussian.
 switch ICcase
     case 1	% Testing IC
         u0 = TestingIC(x); % Jiang and Shu IC

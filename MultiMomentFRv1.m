@@ -45,7 +45,7 @@ a=-1;b=1;dx=(b-a)/nE;xc=(a+dx/2):dx:b;x=ones(3,1)*xc+(dx/2)*xi*ones(1,nE);
 % Define velocity fields functions
 switch fluxfun
     case 'linear'
-        advect = @(x) 1*ones(size(x));
+        advect = @(x) +1*ones(size(x));
     case 'sine' 
         advect = @(x) 1.5+cos(pi*x);
 end
@@ -81,7 +81,7 @@ d=0.2; plotrange = [a,b,min(u0(:))-d,max(u0(:))+2*d];
 %% Solver Loop
 
 % set initial time step
-dt0=cfl*dx/max(v(:));
+dt0=cfl*dx/max(abs(v(:)));
 
 % Set initial time & load IC
 t=0; u=u0; it=0; dt=dt0;

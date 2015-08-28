@@ -27,7 +27,7 @@ fluxfun = 'linear';
    tEnd = 2.00;	% final time.
       K = 3;	% degree of accuaracy (default value).
      nE = 200;	% number of elements.
- scheme = 3;	% (1)MCV3, (2)MCV3_UPCC and (3)MCV3_CPCC.
+ scheme = 1;	% (1)MCV3, (2)MCV3_UPCC and (3)MCV3_CPCC.
 
 % Build Solutions Points
 switch scheme
@@ -46,7 +46,7 @@ nE = nE+2; x=ones(3,1)*xc+(dx/2)*xi*ones(1,nE);
 % Define velocity fields functions
 switch fluxfun
     case 'linear'
-        advect = @(x) 1*ones(size(x));
+        advect = @(x) +1*ones(size(x));
     case 'quasilinear' 
         advect = @(x) 1.0+0.5*sin(2*pi*x);
 end
@@ -75,7 +75,7 @@ d=0.2; plotrange = [a,b,min(u0(:))-d,max(u0(:))+2*d];
 %% Solver Loop
 
 % set initial time step
-dt0=cfl*dx/max(v(:));
+dt0=cfl*dx/max(abs(v(:)));
 
 % Set initial time & load IC
 t=0; u=u0; it=0; dt=dt0;
@@ -84,8 +84,6 @@ t=0; u=u0; it=0; dt=dt0;
 i=2:nE-1;
 
 while t < tEnd
-%for nn = 1:20
-    
     % Correction for final time step
     if t+dt>tEnd, dt=tEnd-t; end
     
@@ -108,7 +106,7 @@ while t < tEnd
     u = bdc(u,nE);
     
     % Compute cell averages (for output)
-    u_bar=(u(1,:)+4*u(2,:)+u(3,:))/6;        
+    u_bar=(u(1,:)+4*u(2,:)+u(3,:))/6;
     
     % increment time and counter
     t=t+dt; it=it+1;

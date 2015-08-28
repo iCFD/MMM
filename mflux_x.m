@@ -39,6 +39,7 @@ fb=bdc_f(fb,nx); fb_x=bdc_f(fb_x,nx);
 
 % Derivative of the Hermite Interpolation function 
 % evaluated at solutions points \xi=[-1,0,1]
+fm_x = zeros(3,nx-1);
 for i = 1:nx-1
     switch ischeme
         case 1 % MCV3
@@ -56,6 +57,5 @@ for i = 1:nx-1
             fm_x(3,i) = 2.0/dx * (s3*(1/12*f(1,i)-5/6*f(2,i)-3/4*f(3,i))+3/4*(1.5+s3)*fb(i+1)-3/4*(1.5-s3)*fb(i));
     end
 end
-
 % impose BCs
 fm_x = bdc(fm_x,nx);

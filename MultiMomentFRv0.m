@@ -88,22 +88,19 @@ while t < tEnd
     if t+dt>tEnd, dt=tEnd-t; end
     
     % Initialization
-    uo = u;
+    uo=u;
     
     % step 1    
-    fm_x=mflux_x(u,v,xi,dx,nE,scheme); f1=fm_x;
+    f1=mflux_x(u,v,xi,dx,nE,scheme);
     for k=1:K; u(k,i)=uo(k,i)-dt*f1(k,i); end 
-    u = bdc(u,nE);
     
     % step 2
-    fm_x=mflux_x(u,v,xi,dx,nE,scheme); f2=fm_x;
+    f2=mflux_x(u,v,xi,dx,nE,scheme);
     for k=1:K; u(k,i)=uo(k,i)-dt*(f1(k,i)+f2(k,i))/4; end
-    u = bdc(u,nE);
 
     % step 3
-    fm_x=mflux_x(u,v,xi,dx,nE, scheme); f3=fm_x;
+    f3=mflux_x(u,v,xi,dx,nE,scheme);
     for k=1:K; u(k,i)=uo(k,i)-dt*(f1(k,i)+f2(k,i)+4*f3(k,i))/6; end 
-    u = bdc(u,nE);
     
     % Compute cell averages (for output)
     u_bar=(u(1,:)+4*u(2,:)+u(3,:))/6;

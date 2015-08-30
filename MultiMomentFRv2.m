@@ -27,25 +27,25 @@ fluxfun = 'linear';
    tEnd = 2.0;	% final time.
       K = 3;	% degree of accuaracy (default value).
      nE = 200;	% number of elements.
- scheme = 3;	% (1)MCV3, (2)MCV3_UPCC and (3)MCV3_CPCC.
+ scheme = 2;	% (1)MCV3, (2)MCV3 w/Rational Function
 
 % Build Solutions Points
 switch scheme
-    case {1,2}  % 'MCV3' or 'MCV3-UPCC'
-        xi = 2.*((1:K)'-1)/(K-1)-1;      % Uniformly Distributed
+	case {1,2} 	% 'MCV3-modified'
+        xi = [0,1/2,1]';                % Uniformly Distributed over [0,1]
     case {3}	% 'MCV3-CPCC'
-        xi = -cos(((1:K)'-0.5)/K*pi);    % Chebyshev Nodes
+        xi = -cos(((1:K)'-0.5)/K*pi);  % Chebyshev Nodes
     otherwise 
         error('not a listed scheme');
 end
 
 % Build Mesh
-a=-1;b=1;dx=(b-a)/nE;xc=(a+dx/2):dx:b;x=ones(3,1)*xc+(dx/2)*xi*ones(1,nE);
+a=-1;b=1;dx=(b-a)/nE;xc=(a+dx/2):dx:b;x=ones(3,1)*xc+(dx/1)*xi*ones(1,nE);
 
 % Define velocity fields functions
 switch fluxfun
     case 'linear'
-        advect = @(x) +1*ones(size(x));
+        advect = @(x) -1*ones(size(x));
     case 'sine' 
         advect = @(x) 1.5+cos(pi*x);
 end
@@ -55,9 +55,9 @@ v=advect(x);
 
 % Build Lagrange k-Polynomials
 l = LagrangePolynomial(xi);
-L.l = double(subs( l.lagrangePolynomial,-1)); % e.g.:[0 0 1]
+L.l = double(subs( l.lagrangePolynomial,-0)); % e.g.:[0 0 1]
 L.r = double(subs( l.lagrangePolynomial,+1)); % e.g.:[1 0 0]
-L.dl= double(subs(l.dlagrangePolynomial,-1)); 
+L.dl= double(subs(l.dlagrangePolynomial,-0)); 
 L.dr= double(subs(l.dlagrangePolynomial,+1)); 
 
 % Jacobian
@@ -96,15 +96,15 @@ while t < tEnd
     uo = u;
     
     % 1st stage
-    dF = mmc_FR(v,u,L,nE,scheme);
+    dF = mmc_FRv2(v,u,L,nE,scheme);
     u = uo-dt*dF/J;
     
     % 2nd Stage
-    dF = mmc_FR(v,u,L,nE,scheme);
+    dF = mmc_FRv2(v,u,L,nE,scheme);
     u = 0.75*uo+0.25*(u-dt*dF/J);
 
     % 3rd stage
-    dF = mmc_FR(v,u,L,nE,scheme);
+    dF = mmc_FRv2(v,u,L,nE,scheme);
     u = (uo+2*(u-dt*dF/J))/3;
     
     % Compute cell averages (for output)
